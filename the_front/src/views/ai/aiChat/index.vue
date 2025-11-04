@@ -5,9 +5,9 @@
       <!-- 对话历史展示区 -->
       <div class="chat-history">
         <div
-          v-for="(msg, index) in chatHistory"
-          :key="index"
-          :class="msg.isUser ? 'user-message' : 'ai-message'"
+            v-for="(msg, index) in chatHistory"
+            :key="index"
+            :class="msg.isUser ? 'user-message' : 'ai-message'"
         >
           <div class="avatar">{{ msg.isUser ? '我' : 'AI' }}</div>
           <div class="content">{{ msg.content }}</div>
@@ -17,10 +17,10 @@
       <!-- 输入区 -->
       <div class="chat-input">
         <el-input
-          v-model="userInput"
-          placeholder="请输入问题..."
-          @keyup.enter.native="sendMessage"
-          clearable
+            v-model="userInput"
+            placeholder="请输入问题..."
+            @keyup.enter.native="sendMessage"
+            clearable
         />
         <el-button type="primary" @click="sendMessage">发送</el-button>
       </div>
@@ -44,7 +44,10 @@ export default {
   },
   methods: {
     async sendMessage() {
-      if (!this.userInput.trim()) return;
+      if (!this.userInput.trim()) {
+        this.$message.warning("请输入问题内容");
+        return;
+      }
 
       // 添加用户消息到历史
       this.chatHistory.push({
@@ -54,14 +57,27 @@ export default {
 
       // 调用AI接口获取回复
       try {
-        const res = await aiChatAPI({ question: this.userInput });
-        // 添加AI回复到历史
+        const res = await aiChatAPI({ question: this.userInput.trim() });
+        // 适配后端AjaxResult格式（code=200为成功）
+        if (res && res.code === 200 && res.data?.answer) {
+          this.chatHistory.push({
+            isUser: false,
+            content: res.data.answer // 对应后端返回的answer字段
+          });
+        } else {
+          // 显示后端返回的错误信息
+          this.chatHistory.push({
+            isUser: false,
+            content: `获取回复失败: ${res?.msg || '后端返回格式异常'}`
+          });
+        }
+      } catch (err) {
+        // 详细输出错误信息到控制台，便于调试
+        console.error("接口调用错误详情:", err);
         this.chatHistory.push({
           isUser: false,
-          content: res.data.answer
+          content: `接口调用失败: ${err.response?.data?.msg || err.message || '网络异常'}`
         });
-      } catch (err) {
-        this.$message.error("AI回复失败，请重试");
       }
 
       // 清空输入框

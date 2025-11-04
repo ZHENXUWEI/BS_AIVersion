@@ -3,9 +3,9 @@ import request from '@/utils/request' // 假设已有封装的请求工具
 // AI 问答接口
 export function aiChatAPI(data) {
     return request({
-        url: '/api/ai/chat', // 后端 AI 接口地址（需与后端协商）
+        url: '/api/ai/api-chat',
         method: 'post',
-        data: data // 传递问题参数，如 { question: "温州市政策有哪些？" }
+        data: { question: data.question?.trim() } // 确保参数不为空
     })
 }
 
