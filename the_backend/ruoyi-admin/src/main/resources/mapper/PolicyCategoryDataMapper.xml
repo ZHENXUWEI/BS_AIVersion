@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.policy.mapper.PolicyCategoryDataMapper">
+
+    <resultMap type="PolicyCategoryData" id="PolicyCategoryDataResult">
+        <result property="id"    column="id"    />
+        <result property="policyCategoryId"    column="policy_category_id"    />
+        <result property="content"    column="content"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectPolicyCategoryDataVo">
+        select id, policy_category_id, content,type,belong, status from policy_category_data
+    </sql>
+
+    <select id="selectPolicyCategoryDataList" parameterType="PolicyCategoryData" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        <where>
+            <if test="policyCategoryId != null "> and policy_category_id = #{policyCategoryId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPolicyCategoryDataById" parameterType="Integer" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectPolicyCategoryDataListById" parameterType="Integer" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPolicyCategoryData" parameterType="PolicyCategoryData" useGeneratedKeys="true" keyProperty="id">
+        insert into policy_category_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="policyCategoryId != null">policy_category_id,</if>
+            <if test="content != null">content,</if>
+            <if test="status != null">status,</if>
+            <if test="type != null">type,</if>
+            <if test="belong != null">belong,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="policyCategoryId != null">#{policyCategoryId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="status != null">#{status},</if>
+            <if test="type != null">#{type},</if>
+            <if test="belong != null">#{belong},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePolicyCategoryData" parameterType="PolicyCategoryData">
+        update policy_category_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="policyCategoryId != null">policy_category_id = #{policyCategoryId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="belong != null">belong = #{belong},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updatePolicyCategoryDataByCategoryId" parameterType="PolicyCategoryData">
+        update policy_category_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="policyCategoryId != null">policy_category_id = #{policyCategoryId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where policy_category_id = #{policyCategoryId}
+    </update>
+
+    <delete id="deletePolicyCategoryDataById" parameterType="Integer">
+        delete from policy_category_data where id = #{id}
+    </delete>
+
+    <delete id="deletePolicyCategoryDataByIds" parameterType="Integer">
+        delete from policy_category_data where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deletePolicyCategoryDataByCategoryId">
+        delete from policy_category_data where policy_category_id=#{categoryId}
+    </delete>
+
+    <select id="selectPolicyCategoryDataListByCategoryId" parameterType="Integer" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        where policy_category_id = #{id}
+    </select>
+    <select id="selectPolicyCategoryDataListByCategoryIdOther" parameterType="Integer" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        where policy_category_id = #{policyCategoryId} and (content is null or content ='其他')
+    </select>
+    <select id="selectPolicyCategoryDataListInClassInfo"
+            parameterType="PolicyCategoryData" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        <where>
+            <if test="policyCategoryId != null "> and policy_category_id = #{policyCategoryId}</if>
+            <if test="content != null  and content != ''"> and content like CONCAT('%', #{content})</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <update id="regionUnbound" parameterType="Integer">
+        UPDATE policy_category_data AS target
+            JOIN (
+                SELECT policy_category_id
+                FROM policy_category_data
+                WHERE id = #{id}
+            ) AS source ON target.type = source.policy_category_id
+        SET target.belong = NULL
+    </update>
+
+    <select id="findByType" parameterType="String" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        where type = #{type}
+    </select>
+
+    <select id="findByBelong" parameterType="Integer" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        where belong = #{belong}
+    </select>
+
+    <select id="findByContent" parameterType="String" resultMap="PolicyCategoryDataResult">
+        <include refid="selectPolicyCategoryDataVo"/>
+        where content = #{content}
+    </select>
+</mapper>

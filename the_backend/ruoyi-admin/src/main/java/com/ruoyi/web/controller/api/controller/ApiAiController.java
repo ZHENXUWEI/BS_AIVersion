@@ -1,0 +1,48 @@
+// com.ruoyi.web.controller.api.controller.AiController.java
+package com.ruoyi.web.controller.api.controller;
+
+import com.ruoyi.web.controller.api.common.Result;
+import com.ruoyi.web.controller.api.dto.AiChatRequest;
+import com.ruoyi.web.controller.api.dto.AiResponse;
+import com.ruoyi.web.controller.api.dto.AiSearchRequest;
+import com.ruoyi.web.controller.api.service.AiService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * AI功能接口控制器
+ * 对应前端AI问答和AI查询页面
+ */
+@RestController
+@RequestMapping("/api/ai")
+@Api(tags = "AI功能接口")
+public class ApiAiController {
+
+    @Autowired
+    private AiService aiService;
+
+    /**
+     * AI问答接口
+     * 处理用户与AI的对话交互
+     */
+    @PostMapping("/api-chat")
+    @ApiOperation("AI问答接口")
+    public Result<AiResponse> chat(@Validated @RequestBody AiChatRequest request) {
+        AiResponse response = aiService.handleChat(request);
+        return Result.success(response);
+    }
+
+    /**
+     * AI查询接口
+     * 处理基于关键词的精准查询
+     */
+    @GetMapping("/api-search")
+    @ApiOperation("AI查询接口")
+    public Result<AiResponse> search(@Validated AiSearchRequest request) {
+        AiResponse response = aiService.handleSearch(request);
+        return Result.success(response);
+    }
+}
