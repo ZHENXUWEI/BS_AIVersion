@@ -34,8 +34,8 @@ server:
 # 日志配置
 logging:
   level:
-    com.ruoyi: debug
-    org.springframework: warn
+    com.ruoyi: DEBUG  # 打印项目包下的DEBUG日志
+    org.springframework.web: DEBUG  # 打印SpringMVC相关日志
 
 # 用户配置
 user:
@@ -65,7 +65,7 @@ spring:
   devtools:
     restart:
       # 热部署开关
-      enabled: true
+      enabled: false
   # redis 配置
   redis:
     # 地址
@@ -102,16 +102,11 @@ token:
   # 令牌有效期（默认30分钟）
   expireTime: 30
 
-ai:
-  alibaba:
-    # 阿里百炼API地址（参考官方文档）
-    url: "https://bailian.aliyuncs.com/v1/chat/completions"
-    # 访问密钥（通过环境变量注入，.gitignore已确保安全）
-#    access-key: "${ALIBABA_AK:}"
-    access-key: "sk-f683165eb5dc45c08a4669b2c317d219"
-    secret: "${ALIBABA_SK:}"
-    # 模型名称（如通用对话模型）
-    model: "qwen-turbo"
+alibabacloud:
+  bailian:
+    access-key: sk-f683165eb5dc45c08a4669b2c317d219  # 你的API密钥
+    url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    model: qwen-plus
 
 
 # MyBatis配置

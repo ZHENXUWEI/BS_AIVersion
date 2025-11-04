@@ -34,13 +34,11 @@ import java.util.Map;
 public class AIServiceImpl implements IAIService {
 
     // 注入阿里百炼配置
-    @Value("${ai.alibaba.url}")
+    @Value("${alibabacloud.bailian.url}")
     private String apiUrl;
-    @Value("${ai.alibaba.access-key}")
+    @Value("${alibabacloud.bailian.access-key}")
     private String accessKey;  // 统一使用accessKey变量名
-    @Value("${ai.alibaba.secret}")
-    private String secret;
-    @Value("${ai.alibaba.model}")
+    @Value("${alibabacloud.bailian.model}")
     private String model;
 
     private final RestTemplate restTemplate = new RestTemplate();

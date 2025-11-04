@@ -153,7 +153,9 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
+                    <include>**/*.yml</include>
                     <include>**/*.xml</include> <!-- 扫描所有XML文件 -->
+                    <include>**/*.properties</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>

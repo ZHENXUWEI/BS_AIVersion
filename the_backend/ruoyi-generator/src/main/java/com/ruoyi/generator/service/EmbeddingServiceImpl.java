@@ -12,20 +12,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 向量生成服务实现（对接百度文心API示例）
- * filePath: BS_AIVersion/the_backend/ruoyi-generator/src/main/java/com/ruoyi/generator/service/impl/EmbeddingServiceImpl.java
+ * 向量生成服务实现（对接阿里百炼API）
  */
 @Service
 public class EmbeddingServiceImpl implements IEmbeddingService {
 
-    @Value("${baidu.ai.api-key}")
+    // 阿里百炼API密钥（从配置文件读取）
+    @Value("${alibabacloud.bailian.access-key}")
     private String apiKey;
 
-    @Value("${baidu.ai.secret-key}")
-    private String secretKey;
+//    @Value("${alibabacloud.bailian.api-secret}")
+//    private String apiSecret;
 
-    private static final String ACCESS_TOKEN_URL = "https://aip.baidubce.com/oauth/2.0/token";
-    private static final String EMBEDDING_URL = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/text_embedding/embedding-v1";
+    // 阿里百炼Embedding接口地址（具体以官方文档为准）
+    private static final String EMBEDDING_URL = "https://bailian.aliyuncs.com/v1/embeddings/text-embedding-v1";
 
     @Override
     public List<Float> generateEmbedding(String text) throws Exception {
@@ -33,38 +33,30 @@ public class EmbeddingServiceImpl implements IEmbeddingService {
             throw new IllegalArgumentException("文本内容不能为空");
         }
 
-        // 1. 获取访问令牌
-        String accessToken = getAccessToken();
-
-        // 2. 调用向量生成API
-        String url = EMBEDDING_URL + "?access_token=" + accessToken;
+        // 1. 构建请求参数
         Map<String, Object> param = new HashMap<>();
-        param.put("text", text);
+        param.put("input", text);  // 阿里百炼通常使用input字段接收文本
 
-        String response = HttpUtils.post(url, JSONObject.toJSONString(param), "application/json");
+        // 2. 构建请求头（包含认证信息）
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put("X-API-Key", apiKey);
+//        headers.put("X-API-Secret", apiSecret);
+
+        // 3. 调用阿里百炼Embedding API
+        String response = HttpUtils.sendPostWithHeaders(EMBEDDING_URL,
+                JSONObject.toJSONString(param),
+                headers);
         JSONObject result = JSONObject.parseObject(response);
 
-        // 3. 解析向量结果（根据实际API返回格式调整）
-        if (result.containsKey("error_code")) {
-            throw new Exception("向量生成失败：" + result.getString("error_msg"));
+        // 4. 解析返回结果（根据阿里百炼实际返回格式调整）
+        if (result.containsKey("code") && !"200".equals(result.getString("code"))) {
+            throw new Exception("向量生成失败：" + result.getString("message"));
         }
-        return result.getJSONArray("data").toJavaList(Float.class);
-    }
 
-    /**
-     * 获取百度AI访问令牌
-     */
-    private String getAccessToken() throws Exception {
-        Map<String, String> params = new HashMap<>();
-        params.put("grant_type", "client_credentials");
-        params.put("client_id", apiKey);
-        params.put("client_secret", secretKey);
-
-        String response = HttpUtils.get(ACCESS_TOKEN_URL, params);
-        JSONObject result = JSONObject.parseObject(response);
-        if (result.containsKey("error")) {
-            throw new Exception("获取令牌失败：" + result.getString("error_description"));
-        }
-        return result.getString("access_token");
+        // 假设返回格式为 { "data": { "embedding": [0.1, 0.2, ...] } }
+        return result.getJSONObject("data")
+                .getJSONArray("embedding")
+                .toJavaList(Float.class);
     }
 }

@@ -15,16 +15,28 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;  // 添加日志导入
 
 /**
  * HTTP请求工具类（Ruoyi框架标准实现）
  */
+
 public class HttpUtils {
+    // 添加日志对象定义
+    private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
+
     // 超时时间（毫秒）
     private static final int TIMEOUT = 5000;
 
@@ -127,5 +139,42 @@ public class HttpUtils {
             }
         }
         return null;
+    }
+
+    public static String sendPostWithHeaders(String url, String param, Map<String, String> headers) {
+        PrintWriter out = null;
+        BufferedReader in = null;
+        StringBuilder result = new StringBuilder();
+        try {
+            URL realUrl = new URL(url);
+            URLConnection conn = realUrl.openConnection();
+
+            // 设置自定义请求头
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                conn.setRequestProperty(entry.getKey(), entry.getValue());
+            }
+
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            out = new PrintWriter(conn.getOutputStream());
+            out.print(param);
+            out.flush();
+
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result.append(line);
+            }
+        } catch (Exception e) {
+            log.error("发送POST请求异常: " + e.getMessage(), e);
+        } finally {
+            try {
+                if (out != null) out.close();
+                if (in != null) in.close();
+            } catch (IOException ex) {
+                log.error("关闭流异常: " + ex.getMessage(), ex);
+            }
+        }
+        return result.toString();
     }
 }
