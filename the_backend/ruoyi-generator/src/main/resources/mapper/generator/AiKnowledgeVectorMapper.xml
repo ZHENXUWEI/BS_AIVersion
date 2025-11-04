@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.generator.mapper.AiKnowledgeVectorMapper">
+
+    <!-- 检索相似向量（示例SQL，实际需结合向量数据库调整） -->
+    <select id="searchSimilar" resultType="java.lang.Long">
+        <!-- 注意：此处为示例，真实场景需用向量数据库（如Milvus）的SQL语法 -->
+        SELECT knowledge_id
+        FROM ai_knowledge_vector
+        ORDER BY similarity(embedding, #{embedding}) DESC
+        LIMIT #{topN}
+    </select>
+
+</mapper>

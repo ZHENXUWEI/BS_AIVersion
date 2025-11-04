@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { aiChatAPI } from "@/api/ai";
+import {aiChatAPI, knowledgeChatAPI} from "@/api/ai";
 import HomeHeader from "@/components/HomeHeader.vue";
 import Footer from "@/components/Footer.vue"; // 后续创建的AI接口
 
@@ -87,28 +87,38 @@ export default {
         timestamp: new Date().getTime() // 增加时间戳便于管理
       });
 
+      // try {
+      //   const res = await aiChatAPI({ question: this.userInput.trim() });
+      //   // 处理AI回复
+      //   if (res && res.code === 200 && res.data?.answer) {
+      //     this.chatHistory.push({
+      //       isUser: false,
+      //       content: res.data.answer,
+      //       timestamp: new Date().getTime()
+      //     });
+      //   } else {
+      //     this.chatHistory.push({
+      //       isUser: false,
+      //       content: `获取回复失败: ${res?.msg || '未知错误'}`,
+      //       timestamp: new Date().getTime()
+      //     });
+      //   }
+      // } catch (err) {
+      //   this.chatHistory.push({
+      //     isUser: false,
+      //     content: `接口调用失败: ${err.message || '网络异常'}`,
+      //     timestamp: new Date().getTime()
+      //   });
+      // }
       try {
-        const res = await aiChatAPI({ question: this.userInput.trim() });
-        // 处理AI回复
-        if (res && res.code === 200 && res.data?.answer) {
-          this.chatHistory.push({
-            isUser: false,
-            content: res.data.answer,
-            timestamp: new Date().getTime()
-          });
-        } else {
-          this.chatHistory.push({
-            isUser: false,
-            content: `获取回复失败: ${res?.msg || '未知错误'}`,
-            timestamp: new Date().getTime()
-          });
-        }
-      } catch (err) {
+        // 切换为知识库问答接口
+        const res = await knowledgeChatAPI({ question: this.userInput });
         this.chatHistory.push({
           isUser: false,
-          content: `接口调用失败: ${err.message || '网络异常'}`,
-          timestamp: new Date().getTime()
+          content: res.data.answer
         });
+      } catch (err) {
+        this.$message.error("知识库问答失败，请重试");
       }
 
       this.userInput = "";

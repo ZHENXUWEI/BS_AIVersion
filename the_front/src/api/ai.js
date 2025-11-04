@@ -9,6 +9,31 @@ export function aiChatAPI(data) {
     })
 }
 
+// 知识库相关接口
+export function addKnowledgeAPI(data) {
+    return request({
+        url: '/api/ai/knowledge/add',
+        method: 'post',
+        data: data
+    })
+}
+
+export function knowledgeChatAPI(data) {
+    return request({
+        url: '/api/ai/knowledge/chat',
+        method: 'post',
+        data: data
+    })
+}
+
+export function listKnowledgeAPI(category) {
+    return request({
+        url: '/api/ai/knowledge/list',
+        method: 'get',
+        params: { category }
+    })
+}
+
 // 若需要其他 AI 功能（如政策分析），可添加更多接口
 export function aiPolicyAnalysisAPI(data) {
     return request({

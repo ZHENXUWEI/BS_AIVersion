@@ -53,6 +53,7 @@ spring:
     basename: i18n/messages
   profiles:
     active: druid
+    include: druid
   # 文件上传
   servlet:
     multipart:
@@ -101,6 +102,18 @@ token:
   # 令牌有效期（默认30分钟）
   expireTime: 30
 
+ai:
+  alibaba:
+    # 阿里百炼API地址（参考官方文档）
+    url: "https://bailian.aliyuncs.com/v1/chat/completions"
+    # 访问密钥（通过环境变量注入，.gitignore已确保安全）
+#    access-key: "${ALIBABA_AK:}"
+    access-key: "sk-f683165eb5dc45c08a4669b2c317d219"
+    secret: "${ALIBABA_SK:}"
+    # 模型名称（如通用对话模型）
+    model: "qwen-turbo"
+
+
 # MyBatis配置
 mybatis:
   # 搜索指定包别名
@@ -128,7 +141,7 @@ xss:
   # 过滤开关
   enabled: true
   # 排除链接（多个用逗号分隔）
-  excludes: /system/notice
+  excludes: /system/notice,/api/xxx,/user/login
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
 

@@ -128,9 +128,36 @@
             <version>1.18.24</version>
             <optional>true</optional>
         </dependency>
+
+            <!-- MyBatis-Plus 核心依赖 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.5.3.1</version> <!-- 推荐稳定版本，与SpringBoot版本适配 -->
+            </dependency>
+
+        <!-- HTTP客户端 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.3</version>
+        </dependency>
     </dependencies>
 
+    <dependencyManagement>
+
+    </dependencyManagement>
+
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.xml</include> <!-- 扫描所有XML文件 -->
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

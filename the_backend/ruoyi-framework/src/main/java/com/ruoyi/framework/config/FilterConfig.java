@@ -3,6 +3,8 @@ package com.ruoyi.framework.config;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.DispatcherType;
+
+import com.ruoyi.framework.config.properties.XssProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -20,11 +22,11 @@ import com.ruoyi.common.utils.StringUtils;
 @Configuration
 public class FilterConfig
 {
-    @Value("${xss.excludes}")
-    private String excludes;
+    private final XssProperties xssProperties;
 
-    @Value("${xss.urlPatterns}")
-    private String urlPatterns;
+    public FilterConfig(XssProperties xssProperties) {
+        this.xssProperties = xssProperties;
+    }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Bean
@@ -34,11 +36,11 @@ public class FilterConfig
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
         registration.setFilter(new XssFilter());
-        registration.addUrlPatterns(StringUtils.split(urlPatterns, ","));
+        registration.addUrlPatterns(StringUtils.split(xssProperties.getUrlPatterns(), ","));
         registration.setName("xssFilter");
         registration.setOrder(FilterRegistrationBean.HIGHEST_PRECEDENCE);
         Map<String, String> initParameters = new HashMap<String, String>();
-        initParameters.put("excludes", excludes);
+        initParameters.put("excludes", xssProperties.getExcludes());
         registration.setInitParameters(initParameters);
         return registration;
     }
