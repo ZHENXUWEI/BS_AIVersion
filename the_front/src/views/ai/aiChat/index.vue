@@ -23,6 +23,7 @@
             clearable
         />
         <el-button type="primary" @click="sendMessage">发送</el-button>
+        <el-button type="warning" @click="clearChatHistory">清空记录</el-button>
       </div>
     </div>
   </div>
@@ -38,50 +39,87 @@ export default {
   components: {Footer, HomeHeader},
   data() {
     return {
-      chatHistory: [], // 对话历史 [{ isUser: true/false, content: '...' }]
-      userInput: ""    // 用户输入内容
+      chatHistory: [], // 初始化时从本地存储加载
+      userInput: ""
     };
   },
+  created() {
+    // 页面加载时从localStorage读取历史记录
+    this.loadChatHistory();
+    // 监听页面刷新/关闭事件，保存记录
+    window.addEventListener('beforeunload', this.saveChatHistory);
+  },
+  beforeDestroy() {
+    // 组件销毁前保存记录（路由切换时触发）
+    this.saveChatHistory();
+    window.removeEventListener('beforeunload', this.saveChatHistory);
+  },
   methods: {
+    // 从本地存储加载历史
+    loadChatHistory() {
+      const saved = localStorage.getItem('aiChatHistory');
+      if (saved) {
+        try {
+          this.chatHistory = JSON.parse(saved);
+        } catch (e) {
+          console.error('加载聊天记录失败', e);
+          localStorage.removeItem('aiChatHistory'); // 清除损坏的存储
+        }
+      }
+    },
+    // 保存历史到本地存储
+    saveChatHistory() {
+      if (this.chatHistory.length > 0) {
+        localStorage.setItem('aiChatHistory', JSON.stringify(this.chatHistory));
+      }
+    },
+    // 发送消息方法增强
     async sendMessage() {
       if (!this.userInput.trim()) {
         this.$message.warning("请输入问题内容");
         return;
       }
 
-      // 添加用户消息到历史
+      // 添加用户消息
       this.chatHistory.push({
         isUser: true,
-        content: this.userInput
+        content: this.userInput.trim(),
+        timestamp: new Date().getTime() // 增加时间戳便于管理
       });
 
-      // 调用AI接口获取回复
       try {
         const res = await aiChatAPI({ question: this.userInput.trim() });
-        // 适配后端AjaxResult格式（code=200为成功）
+        // 处理AI回复
         if (res && res.code === 200 && res.data?.answer) {
           this.chatHistory.push({
             isUser: false,
-            content: res.data.answer // 对应后端返回的answer字段
+            content: res.data.answer,
+            timestamp: new Date().getTime()
           });
         } else {
-          // 显示后端返回的错误信息
           this.chatHistory.push({
             isUser: false,
-            content: `获取回复失败: ${res?.msg || '后端返回格式异常'}`
+            content: `获取回复失败: ${res?.msg || '未知错误'}`,
+            timestamp: new Date().getTime()
           });
         }
       } catch (err) {
-        // 详细输出错误信息到控制台，便于调试
-        console.error("接口调用错误详情:", err);
         this.chatHistory.push({
           isUser: false,
-          content: `接口调用失败: ${err.response?.data?.msg || err.message || '网络异常'}`
+          content: `接口调用失败: ${err.message || '网络异常'}`,
+          timestamp: new Date().getTime()
         });
       }
 
-      // 清空输入框
       this.userInput = "";
+      // 每次消息更新后立即保存
+      this.saveChatHistory();
+    },
+    // 新增：清空历史记录功能
+    clearChatHistory() {
+      this.chatHistory = [];
+      localStorage.removeItem('aiChatHistory');
+      this.$message.success("已清空聊天记录");
     }
   }
 };
