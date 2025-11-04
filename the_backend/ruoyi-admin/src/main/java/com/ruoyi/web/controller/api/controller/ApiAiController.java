@@ -1,6 +1,7 @@
 // com.ruoyi.web.controller.api.controller.AiController.java
 package com.ruoyi.web.controller.api.controller;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.web.controller.api.common.Result;
 import com.ruoyi.web.controller.api.dto.AiChatRequest;
 import com.ruoyi.web.controller.api.dto.AiResponse;
@@ -11,6 +12,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * AI功能接口控制器
@@ -30,9 +35,16 @@ public class ApiAiController {
      */
     @PostMapping("/api-chat")
     @ApiOperation("AI问答接口")
-    public Result<AiResponse> chat(@Validated @RequestBody AiChatRequest request) {
+//    public Result<Map<String, Object>> chat(@Validated @RequestBody AiChatRequest request) {
+//        AiResponse response = aiService.handleChat(request);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("content", response.getContent());
+//        result.put("timestamp", response.getTimestamp());
+//        return Result.success(result); // 确保前端能正确解析res.data.data.content
+//    }
+    public AjaxResult chat(@Validated @RequestBody AiChatRequest request) { // 添加@RequestBody注解
         AiResponse response = aiService.handleChat(request);
-        return Result.success(response);
+        return AjaxResult.success(Collections.singletonMap("answer", response.getContent()));
     }
 
     /**

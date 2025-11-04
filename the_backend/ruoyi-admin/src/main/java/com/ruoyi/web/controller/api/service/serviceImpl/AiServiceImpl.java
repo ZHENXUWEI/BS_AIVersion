@@ -63,7 +63,11 @@ public class AiServiceImpl implements AiService {
      * 生成问答回复（模拟AI模型）
      */
     private String generateChatAnswer(String question) {
-        // 示例：简单回复，实际应调用真实AI接口
+        // 处理可能的空值情况
+        if (question == null || question.trim().isEmpty()) {
+            return "请输入有效的问题内容，我会尽力为您解答。";
+        }
+        // 实际项目中替换为真实AI接口调用
         return String.format("已收到您的问题：\"%s\"。这是AI生成的回复内容，实际项目中会替换为真实AI模型返回结果。", question);
     }
 
