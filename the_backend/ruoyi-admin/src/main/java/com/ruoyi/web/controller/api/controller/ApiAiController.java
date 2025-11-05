@@ -38,17 +38,17 @@ public class ApiAiController {
      */
     @PostMapping("/chat")
     @ApiOperation("AI问答接口")
-//    public Result<Map<String, Object>> chat(@Validated @RequestBody AiChatRequest request) {
-//        AiResponse response = aiService.handleChat(request);
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("content", response.getContent());
-//        result.put("timestamp", response.getTimestamp());
-//        return Result.success(result); // 确保前端能正确解析res.data.data.content
-//    }
-    public AjaxResult chat(@Validated @RequestBody AiChatRequest request) { // 添加@RequestBody注解
+    public Result<Map<String, Object>> chat(@Validated @RequestBody AiChatRequest request) {
         AiResponse response = aiService.handleChat(request);
-        return AjaxResult.success(Collections.singletonMap("answer", response.getContent()));
+        Map<String, Object> result = new HashMap<>();
+        result.put("content", response.getContent());
+        result.put("timestamp", response.getTimestamp());
+        return Result.success(result); // 确保前端能正确解析res.data.data.content
     }
+//    public AjaxResult chat(@Validated @RequestBody AiChatRequest request) { // 添加@RequestBody注解
+//        AiResponse response = aiService.handleChat(request);
+//        return AjaxResult.success(Collections.singletonMap("answer", response.getContent()));
+//    }
 
     /**
      * 流式AI问答接口

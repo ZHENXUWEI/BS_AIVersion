@@ -114,7 +114,7 @@ export default {
       try {
         // 调用接口获取完整回答
         const res = await aiChatAPI({ question });
-        const fullAnswer = res.data.answer || "未获取到有效回答";
+        const fullAnswer = res.data.data.answer || "未获取到有效回答";
 
         // 更新AI消息：结束加载状态，存储完整内容
         this.chatHistory[aiMsgIndex].isLoading = false;
