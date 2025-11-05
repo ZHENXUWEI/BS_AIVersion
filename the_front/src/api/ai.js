@@ -5,19 +5,28 @@ export function aiChatAPI(data) {
     return request({
         url: '/api/ai/chat',
         method: 'post',
-        data: { question: data.question?.trim() }, // 确保参数不为空
-        timeout: 60000 // 前端超时同步延长至60秒
+        data: { question: data.question?.trim() },
+        timeout: 60000
     }).then(response => {
-        // 统一处理成功与失败响应
-        if (response.code === 200) {
-            // 正常响应时返回answer
-            return response.data?.answer;
+        console.log('=== AI接口响应详情 ===');
+        console.log('完整响应:', response);
+        console.log('响应状态码:', response.status);
+        console.log('响应消息:', response.msg);
+        console.log('数据内容:', response.data);
+        console.log('====================');
+
+        // 修正：使用正确的字段名 status 而不是 code
+        if (response.status === 200 || response.status === 0) {
+            // 直接返回回答内容
+            const answer = response.data?.content || "未获取到有效回答";
+            console.log('提取的回答:', answer);
+            return answer;
         } else {
-            // 错误响应时抛出异常信息
+            // 修正：使用 response.msg 而不是 response.message
             throw new Error(response.msg || '接口调用失败');
         }
     }).catch(error => {
-        // 捕获网络错误或超时
+        console.error('AI接口调用错误:', error);
         throw new Error(error.message || '网络异常，请稍后重试');
     });
 }

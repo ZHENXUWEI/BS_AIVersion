@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import {aiChatAPI, knowledgeChatAPI} from "@/api/ai";
+import {aiChatAPI} from "@/api/ai";
 import HomeHeader from "@/components/HomeHeader.vue";
 import Footer from "@/components/Footer.vue";
 
@@ -90,46 +90,62 @@ export default {
         return;
       }
 
+      console.log('=== 开始发送消息 ===');
+      console.log('问题:', question);
+
       // 添加用户消息
       this.chatHistory.push({
         isUser: true,
         content: question,
-        displayContent: question,  // 直接显示完整内容
+        displayContent: question,
         timestamp: new Date().getTime()
       });
 
       // 添加AI加载消息
       const aiMsgIndex = this.chatHistory.push({
         isUser: false,
-        isLoading: true,  // 加载状态标识
-        content: "",      // 存储完整内容
-        displayContent: "",  // 逐字显示的内容
+        isLoading: true,
+        content: "",
+        displayContent: "",
         timestamp: new Date().getTime()
-      }) - 1;  // 获取当前AI消息的索引
+      }) - 1;
 
       this.userInput = "";
       this.isSending = true;
-      this.saveChatHistory();  // 保存状态
+      this.saveChatHistory();
 
       try {
-        // 调用接口获取完整回答
-        const res = await aiChatAPI({ question });
-        const fullAnswer = res.data.data.answer || "未获取到有效回答";
+        console.log('=== 调用AI接口前 ===');
+        const fullAnswer = await aiChatAPI({ question });
+        console.log('=== AI接口调用完成 ===');
+        console.log('收到的回答类型:', typeof fullAnswer);
+        console.log('收到的回答内容:', fullAnswer);
+        console.log('回答长度:', fullAnswer?.length);
 
-        // 更新AI消息：结束加载状态，存储完整内容
+        // 更严格的空值检查
+        if (!fullAnswer || fullAnswer.trim() === "" || fullAnswer === "未获取到有效回答") {
+          console.warn('回答内容无效');
+          throw new Error('AI返回内容无效');
+        }
+
+        console.log('=== 更新AI消息 ===');
         this.chatHistory[aiMsgIndex].isLoading = false;
         this.chatHistory[aiMsgIndex].content = fullAnswer;
+        console.log('AI消息更新完成');
 
         // 逐字显示效果
+        console.log('=== 开始逐字显示 ===');
         this.typeWriter(aiMsgIndex, fullAnswer);
 
       } catch (err) {
-        // 错误处理：显示错误信息
+        console.error('=== 发送消息错误 ===', err);
         this.chatHistory[aiMsgIndex].isLoading = false;
         this.chatHistory[aiMsgIndex].displayContent = `接口调用失败: ${err.message || '网络异常'}`;
+        console.log('错误处理完成');
       } finally {
         this.isSending = false;
         this.saveChatHistory();
+        console.log('=== 发送消息流程结束 ===');
       }
     },
     // 逐字显示函数
