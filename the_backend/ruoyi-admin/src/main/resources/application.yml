@@ -47,6 +47,13 @@ user:
 
 # Spring配置
 spring:
+  ai:
+    dashscope:
+      api-key: sk-f683165eb5dc45c08a4669b2c317d219  # 建议通过环境变量注入，避免硬编码
+      options:
+        model: qwen-plus  # 默认模型（如通义千问）
+        temperature: 0.7  # 默认温度值
+        top-p: 0.8        # 默认核采样参数
   # 资源信息
   messages:
     # 国际化资源文件路径
