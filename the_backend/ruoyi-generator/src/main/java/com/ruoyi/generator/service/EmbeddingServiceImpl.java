@@ -18,7 +18,7 @@ import java.util.Map;
 public class EmbeddingServiceImpl implements IEmbeddingService {
 
     // 阿里百炼API密钥（从配置文件读取）
-    @Value("${alibabacloud.bailian.access-key}")
+    @Value("${alibabacloud.bailian.api-key}")
     private String apiKey;
 
 //    @Value("${alibabacloud.bailian.api-secret}")

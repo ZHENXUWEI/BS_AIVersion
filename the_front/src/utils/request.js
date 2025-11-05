@@ -3,7 +3,7 @@ import { getCookie } from "./cookie";
 const service = axios.create({
   // baseURL: "/api",
   baseURL: "http://localhost:8080",
-  timeout: 5000, // request timeout
+  timeout: 45000, // request timeout
 });
 
 // 请求拦截器

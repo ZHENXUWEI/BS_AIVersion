@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -38,7 +39,7 @@ public class HttpUtils {
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
 
     // 超时时间（毫秒）
-    private static final int TIMEOUT = 5000;
+    private static final int TIMEOUT = 30000;
 
     /**
      * 发送GET请求
@@ -149,6 +150,8 @@ public class HttpUtils {
             URL realUrl = new URL(url);
             URLConnection conn = realUrl.openConnection();
 
+            conn.setConnectTimeout(TIMEOUT);
+            conn.setReadTimeout(TIMEOUT);  // 关键：设置读取响应的超时时间
             // 设置自定义请求头
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 conn.setRequestProperty(entry.getKey(), entry.getValue());
@@ -165,8 +168,14 @@ public class HttpUtils {
             while ((line = in.readLine()) != null) {
                 result.append(line);
             }
-        } catch (Exception e) {
-            log.error("发送POST请求异常: " + e.getMessage(), e);
+        } catch (SocketTimeoutException e) {  // 先捕获超时异常（子类异常）
+            log.error("发送POST请求超时（URL: {}，超时时间: {}ms）", url, TIMEOUT, e);
+            // 可根据需要抛出业务异常，让上层处理
+            // throw new ServiceException("接口调用超时，请稍后重试");
+        } catch (IOException e) {  // 再捕获普通I/O异常（父类异常）
+            log.error("发送POST请求I/O异常（URL: {}）: {}", url, e.getMessage(), e);
+        } catch (Exception e) {  // 最后捕获其他异常
+            log.error("发送POST请求未知异常（URL: {}）: {}", url, e.getMessage(), e);
         } finally {
             try {
                 if (out != null) out.close();

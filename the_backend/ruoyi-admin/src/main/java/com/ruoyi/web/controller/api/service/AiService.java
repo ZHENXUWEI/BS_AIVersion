@@ -16,10 +16,10 @@ public interface AiService {
      */
     AiResponse handleChat(AiChatRequest request);
 
-    /**
-     * 处理AI查询
-     * @param request 查询请求参数
-     * @return 查询响应结果
-     */
-    AiResponse handleSearch(AiSearchRequest request);
+//    /**
+//     * 处理AI查询
+//     * @param request 查询请求参数
+//     * @return 查询响应结果
+//     */
+//    AiResponse handleSearch(AiSearchRequest request);
 }

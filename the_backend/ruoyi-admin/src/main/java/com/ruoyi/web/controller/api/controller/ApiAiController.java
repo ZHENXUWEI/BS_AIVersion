@@ -10,9 +10,12 @@ import com.ruoyi.web.controller.api.service.AiService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +36,7 @@ public class ApiAiController {
      * AI问答接口
      * 处理用户与AI的对话交互
      */
-    @PostMapping("/api-chat")
+    @PostMapping("/chat")
     @ApiOperation("AI问答接口")
 //    public Result<Map<String, Object>> chat(@Validated @RequestBody AiChatRequest request) {
 //        AiResponse response = aiService.handleChat(request);
@@ -48,13 +51,26 @@ public class ApiAiController {
     }
 
     /**
-     * AI查询接口
-     * 处理基于关键词的精准查询
+     * 流式AI问答接口
      */
-    @GetMapping("/api-search")
-    @ApiOperation("AI查询接口")
-    public Result<AiResponse> search(@Validated AiSearchRequest request) {
-        AiResponse response = aiService.handleSearch(request);
-        return Result.success(response);
+    @PostMapping(value = "/chats", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> chatStream(@RequestBody AiChatRequest request) {
+        // 调用服务获取完整回答
+        String fullAnswer = aiService.handleChat(request).getContent();
+
+        // 模拟流式输出（实际项目中应从AI服务直接获取流）
+        return Flux.fromArray(fullAnswer.split(""))
+                .delayElements(Duration.ofMillis(50)); // 控制打字速度
     }
+
+//    /**
+//     * AI查询接口
+//     * 处理基于关键词的精准查询
+//     */
+//    @GetMapping("/api-search")
+//    @ApiOperation("AI查询接口")
+//    public Result<AiResponse> search(@Validated AiSearchRequest request) {
+//        AiResponse response = aiService.handleSearch(request);
+//        return Result.success(response);
+//    }
 }

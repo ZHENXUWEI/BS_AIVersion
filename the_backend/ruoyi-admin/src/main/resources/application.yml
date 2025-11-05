@@ -160,6 +160,6 @@ forest:
 # 阿里百炼配置
 alibabacloud:
   bailian:
-    access-key: sk-f683165eb5dc45c08a4669b2c317d219  # 替换为实际获取的API Key
+    api-key: sk-f683165eb5dc45c08a4669b2c317d219  # 替换为实际获取的API Key
     url: https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation
     model: qwen-plus  # 或其他使用的模型
