@@ -54,7 +54,7 @@ public class AiServiceImpl implements AiService {
             // 2. 构建请求头（仅包含认证信息）
             Map<String, String> headers = new HashMap<>();
             headers.put("Content-Type", "application/json; charset=utf-8");
-            headers.put("Authorization", "Bearer " + accessKey);
+            headers.put("X-DashScope-Key", accessKey);
 
             // 3. 发送HTTP POST请求
             String responseStr = HttpUtils.sendPostWithHeaders(
