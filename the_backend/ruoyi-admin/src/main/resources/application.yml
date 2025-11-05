@@ -31,36 +31,18 @@ server:
       # Tomcat启动初始化的线程数，默认值10
       min-spare: 100
 
-# 日志配置
-logging:
-  level:
-    com.ruoyi: DEBUG  # 打印项目包下的DEBUG日志
-    org.springframework.web: DEBUG  # 打印SpringMVC相关日志
-
-# 用户配置
-user:
-  password:
-    # 密码最大错误次数
-    maxRetryCount: 5
-    # 密码锁定时间（默认10分钟）
-    lockTime: 10
-
 # Spring配置
 spring:
-  ai:
-    dashscope:
-      api-key: sk-f683165eb5dc45c08a4669b2c317d219  # 建议通过环境变量注入，避免硬编码
-      options:
-        model: qwen-plus  # 默认模型（如通义千问）
-        temperature: 0.7  # 默认温度值
-        top-p: 0.8        # 默认核采样参数
+  # 激活配置文件
+  profiles:
+    active: druid
+    include: druid
+
   # 资源信息
   messages:
     # 国际化资源文件路径
     basename: i18n/messages
-  profiles:
-    active: druid
-    include: druid
+
   # 文件上传
   servlet:
     multipart:
@@ -68,11 +50,13 @@ spring:
       max-file-size: 50MB
       # 设置总上传的文件大小
       max-request-size: 200MB
+
   # 服务模块
   devtools:
     restart:
       # 热部署开关
       enabled: false
+
   # redis 配置
   redis:
     # 地址
@@ -100,6 +84,20 @@ spring:
         max-attempts: 3
         max-interval: 1000ms
 
+# 日志配置
+logging:
+  level:
+    com.ruoyi: DEBUG  # 打印项目包下的DEBUG日志
+    org.springframework.web: DEBUG  # 打印SpringMVC相关日志
+
+# 用户配置
+user:
+  password:
+    # 密码最大错误次数
+    maxRetryCount: 5
+    # 密码锁定时间（默认10分钟）
+    lockTime: 10
+
 # token配置
 token:
   # 令牌自定义标识
@@ -108,13 +106,6 @@ token:
   secret: abcdefghijklmnopqrstuvwxyz
   # 令牌有效期（默认30分钟）
   expireTime: 30
-
-alibabacloud:
-  bailian:
-    access-key: sk-f683165eb5dc45c08a4669b2c317d219  # 你的API密钥
-    url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    model: qwen-plus
-
 
 # MyBatis配置
 mybatis:
@@ -147,6 +138,7 @@ xss:
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
 
+# Forest配置
 forest:
   backend: okhttp3             # 后端HTTP框架（默认为 okhttp3）
   max-connections: 1000        # 连接池最大连接数（默认为 500）
@@ -164,3 +156,10 @@ forest:
   log-response-status: true    # 打开/关闭Forest响应状态日志（默认为 true）
   log-response-content: true   # 打开/关闭Forest响应内容日志（默认为 false）
   async-mode: platform         # [自v1.5.27版本起可用] 异步模式（默认为 platform）
+
+# 阿里百炼配置
+alibabacloud:
+  bailian:
+    access-key: sk-f683165eb5dc45c08a4669b2c317d219  # 替换为实际获取的API Key
+    url: https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation
+    model: qwen-plus  # 或其他使用的模型
