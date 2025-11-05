@@ -1,44 +1,23 @@
 package com.ruoyi.web.controller.api.service;
 
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.prompt.PromptTemplate;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import com.ruoyi.web.controller.api.utils.DashScopeHttpUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
 @Service
-@ConditionalOnBean(ChatModel.class) // 只有当 ChatModel bean 存在时才创建
 public class DashScopeAiService {
+    private final DashScopeHttpUtils dashScopeHttpUtils;
 
-    private final ChatClient chatClient;
-
-    public DashScopeAiService(ChatModel chatModel) {
-        this.chatClient = ChatClient.create(chatModel);
+    // 从配置文件读取API密钥
+    public DashScopeAiService(@Value("${spring.ai.dashscope.api-key}") String apiKey) {
+        this.dashScopeHttpUtils = new DashScopeHttpUtils(apiKey);
     }
 
     /**
-     * 基础问答调用
+     * 调用大模型处理政策分析
      */
-    public String chat(String question) {
-        return chatClient.prompt(question)
-                .call()
-                .content();
-    }
-
-    /**
-     * 带动态参数的问答
-     */
-    public String chatWithContext(String question, String context) {
-        String template = "基于以下上下文回答问题：\n{context}\n问题：{question}";
-
-        PromptTemplate promptTemplate = new PromptTemplate(template);
-        Prompt prompt = promptTemplate.create(Map.of("context", context, "question", question));
-
-        return chatClient.prompt(prompt)
-                .call()
-                .content();
+    public String analyzePolicy(String question) {
+        // 调用HTTP工具类，指定模型（如qwen-plus）
+        return dashScopeHttpUtils.generate(question, "qwen-plus");
     }
 }

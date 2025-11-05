@@ -31,6 +31,7 @@
         <poi.version>4.1.2</poi.version>
         <velocity.version>2.3</velocity.version>
         <jwt.version>0.9.1</jwt.version>
+        <spring-ai.version>0.8.0</spring-ai.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -186,22 +187,36 @@
 <!--            <dependency>-->
 <!--                <groupId>org.springframework.ai</groupId>-->
 <!--                <artifactId>spring-ai-parent</artifactId>-->
-<!--                <version>1.1.0-M4</version>-->
+<!--                <version>${spring-ai.version}</version>-->
 <!--                <type>pom</type>-->
 <!--            </dependency>-->
 
-            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-                <version>4.0.0-M3</version>
-            </dependency>
 
-            <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
-                <artifactId>spring-ai-alibaba-starter</artifactId>
-                <version>1.0.0-M5.1</version>
-            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-starter-web</artifactId>-->
+<!--                <version>4.0.0-M3</version>-->
+<!--            </dependency>-->
+
+<!--            <dependency>-->
+<!--                <groupId>com.alibaba.cloud.ai</groupId>-->
+<!--                <artifactId>spring-ai-alibaba-starter</artifactId>-->
+<!--                <version>1.0.0-M5.1</version>-->
+<!--            </dependency>-->
+
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.ai</groupId>-->
+<!--                <artifactId>spring-ai-dashscope</artifactId>-->
+<!--                <version>1.1.0-M4</version> &lt;!&ndash; 需与项目中 spring-ai-model 版本保持一致 &ndash;&gt;-->
+<!--            </dependency>-->
+
+            <!-- 阿里AI工具调用依赖 -->
+<!--            <dependency>-->
+<!--                <groupId>com.alibaba.cloud.ai</groupId>-->
+<!--                <artifactId>spring-ai-alibaba-starter-tool-calling-common</artifactId>-->
+<!--                <version>1.1.0.0-M3</version>-->
+<!--            </dependency>-->
         </dependencies>
     </dependencyManagement>
 
@@ -231,24 +246,49 @@
     </build>
 
     <repositories>
+        <!-- Spring Milestones 仓库（包含 Spring AI） -->
         <repository>
-            <id>public</id>
-            <name>aliyun nexus</name>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>alimaven</id>
+            <name>Aliyun Maven</name>
             <url>https://maven.aliyun.com/repository/public</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
-            <id>public</id>
-            <name>aliyun nexus</name>
+            <id>alimaven</id>
+            <name>Aliyun Maven</name>
             <url>https://maven.aliyun.com/repository/public</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
