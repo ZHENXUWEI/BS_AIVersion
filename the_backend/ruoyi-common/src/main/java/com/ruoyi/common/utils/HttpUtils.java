@@ -15,18 +15,14 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.SocketTimeoutException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.*;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;  // 添加日志导入
 
@@ -142,48 +138,40 @@ public class HttpUtils {
         return null;
     }
 
-    public static String sendPostWithHeaders(String url, String param, Map<String, String> headers) {
-        PrintWriter out = null;
-        BufferedReader in = null;
-        StringBuilder result = new StringBuilder();
+    public static String sendPostWithHeaders(String url, String jsonBody, Map<String, String> headers, int timeout) throws IOException {
+        HttpURLConnection connection = null;
         try {
-            URL realUrl = new URL(url);
-            URLConnection conn = realUrl.openConnection();
+            URL apiUrl = new URL(url);
+            connection = (HttpURLConnection) apiUrl.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
 
-            conn.setConnectTimeout(TIMEOUT);
-            conn.setReadTimeout(TIMEOUT);  // 关键：设置读取响应的超时时间
-            // 设置自定义请求头
+            // 设置超时时间
+            connection.setConnectTimeout(timeout);
+            connection.setReadTimeout(timeout);
+
+            // 设置请求头
             for (Map.Entry<String, String> entry : headers.entrySet()) {
-                conn.setRequestProperty(entry.getKey(), entry.getValue());
+                connection.setRequestProperty(entry.getKey(), entry.getValue());
             }
 
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            out = new PrintWriter(conn.getOutputStream());
-            out.print(param);
-            out.flush();
-
-            in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-            String line;
-            while ((line = in.readLine()) != null) {
-                result.append(line);
+            // 发送请求体
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = jsonBody.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
             }
-        } catch (SocketTimeoutException e) {  // 先捕获超时异常（子类异常）
-            log.error("发送POST请求超时（URL: {}，超时时间: {}ms）", url, TIMEOUT, e);
-            // 可根据需要抛出业务异常，让上层处理
-            // throw new ServiceException("接口调用超时，请稍后重试");
-        } catch (IOException e) {  // 再捕获普通I/O异常（父类异常）
-            log.error("发送POST请求I/O异常（URL: {}）: {}", url, e.getMessage(), e);
-        } catch (Exception e) {  // 最后捕获其他异常
-            log.error("发送POST请求未知异常（URL: {}）: {}", url, e.getMessage(), e);
+
+            // 读取响应
+            try (InputStream inputStream = connection.getInputStream();
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                return reader.lines().collect(Collectors.joining("\n"));
+            }
+
         } finally {
-            try {
-                if (out != null) out.close();
-                if (in != null) in.close();
-            } catch (IOException ex) {
-                log.error("关闭流异常: " + ex.getMessage(), ex);
+            if (connection != null) {
+                connection.disconnect();
             }
         }
-        return result.toString();
     }
 }

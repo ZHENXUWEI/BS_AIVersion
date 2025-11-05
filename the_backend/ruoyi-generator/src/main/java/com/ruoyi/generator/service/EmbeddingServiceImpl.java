@@ -46,7 +46,7 @@ public class EmbeddingServiceImpl implements IEmbeddingService {
         // 3. 调用阿里百炼Embedding API
         String response = HttpUtils.sendPostWithHeaders(EMBEDDING_URL,
                 JSONObject.toJSONString(param),
-                headers);
+                headers,120000);
         JSONObject result = JSONObject.parseObject(response);
 
         // 4. 解析返回结果（根据阿里百炼实际返回格式调整）

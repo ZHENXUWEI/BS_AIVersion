@@ -63,6 +63,8 @@ public class AiServiceImpl implements AiService {
             // 设置返回格式为文本
             Map<String, String> parameters = new HashMap<>();
             parameters.put("result_format", "text");
+            parameters.put("max_tokens", String.valueOf(2048)); // 限制输出长度
+            parameters.put("temperature", String.valueOf(0.7)); // 控制随机性
             requestBody.put("parameters", parameters);
             // 指定模型名称
             requestBody.put("model", model);
@@ -78,7 +80,7 @@ public class AiServiceImpl implements AiService {
 
             // 4. 调用Ruoyi自带的HttpUtils发送POST请求
 //            int aiTimeout = 20000;
-            String responseStr = HttpUtils.sendPostWithHeaders(apiUrl, jsonBody, headers);
+            String responseStr = HttpUtils.sendPostWithHeaders(apiUrl, jsonBody, headers,120000);
             log.info("AI接口响应: {}", responseStr);
 
             // 5. 解析响应结果

@@ -6,7 +6,7 @@ export function aiChatAPI(data) {
         url: '/api/ai/chat',
         method: 'post',
         data: { question: data.question?.trim() },
-        timeout: 60000
+        timeout: 120000
     }).then(response => {
         console.log('=== AI接口响应详情 ===');
         console.log('完整响应:', response);
