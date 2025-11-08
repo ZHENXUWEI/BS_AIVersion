@@ -169,7 +169,7 @@ const timeStatusFun=(t)=>{
                     <img class="logoimg" src="../assets/images/logo.png" alt="">
                 </div>
                 <div style="margin-left:6.3vw" class="u1650_text ">
-                    <span>杭钢集团科技创新平台</span>
+                    <span>科技创新平台</span>
                 </div>
            </div>
         

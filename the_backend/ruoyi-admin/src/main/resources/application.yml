@@ -147,7 +147,7 @@ forest:
   max-async-thread-size: 300   # [自v1.5.21版本起可用] 最大异步线程数
   max-async-queue-size: 16     # [自v1.5.22版本起可用] 最大异步线程池队列大小
   timeout: 3000                # [已不推荐使用] 请求超时时间，单位为毫秒（默认为 3000）
-  connect-timeout: 3000        # 连接超时时间，单位为毫秒（默认为 timeout）
+  connect-timeout: 3000        # 连接超时时间，单位为毫秒（默认为 timeout）cd
   read-timeout: 3000           # 数据读取超时时间，单位为毫秒（默认为 timeout）
   max-retry-count: 0           # 请求失败后重试次数（默认为 0 次不重试）
   ssl-protocol: TLS            # 单向验证的HTTPS的默认TLS协议（默认为 TLS）

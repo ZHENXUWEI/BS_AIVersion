@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <!-- <h3>杭钢集团后台管理系统</h3> -->
+    <!-- <h3>后台管理系统</h3> -->
     <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="名称" prop="name">
         <el-input v-model="queryParams.name" placeholder="请输入名称" clearable @keyup.enter.native="handleQuery" />
@@ -59,7 +59,7 @@
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
       @pagination="getList" />
 
-  
+
     <el-dialog :title="title" :visible.sync="openCompany" width="500px" append-to-body>
       <el-form ref="formCompany" :model="formCompany" :rules="rules" label-width="80px">
         <el-form-item label="图片名称" prop="name">
