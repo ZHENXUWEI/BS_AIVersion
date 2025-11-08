@@ -255,7 +255,7 @@ export default {
   transition: all 0.3s;
 
   /* 文字大小随按钮大小变化 */
-  font-size: 4vw;
+  font-size: 2vw;
   max-font-size: 48px;
   min-font-size: 24px;
 }
