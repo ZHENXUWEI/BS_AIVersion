@@ -31,6 +31,14 @@
             @keyup.enter.native="sendMessage"
             clearable
             :disabled="isSending"/>
+<!--        语音识别-->
+        <el-button
+            :type="isListening ? 'success' : 'info'"
+            @click="toggleVoiceRecognition"
+            :disabled="isSending">
+          {{ isListening ? '停止识别' : '语音输入' }}
+        </el-button>
+
         <el-button
             type="primary"
             @click="sendMessage"
@@ -51,6 +59,10 @@ export default {
   components: { Footer, HomeHeader },
   data() {
     return {
+      // 语音识别相关状态
+      isListening: false,
+      recognition: null,
+
       chatHistory: [],
       userInput: "",
       isSending: false,  // 控制整体发送状态
@@ -60,6 +72,8 @@ export default {
   created() {
     this.loadChatHistory();
     window.addEventListener('beforeunload', this.saveChatHistory);
+    // 初始化语音识别
+    this.initVoiceRecognition();
   },
   beforeDestroy() {
     this.saveChatHistory();
@@ -76,6 +90,61 @@ export default {
           console.error('加载聊天记录失败', e);
           localStorage.removeItem('aiChatHistory');
         }
+      }
+    },
+    initVoiceRecognition() {
+      // 检查浏览器支持
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        console.warn('当前浏览器不支持语音识别功能');
+        return;
+      }
+
+      // 创建识别实例
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      this.recognition = new SpeechRecognition();
+
+      // 配置识别参数
+      this.recognition.continuous = false; // 一次性识别
+      this.recognition.interimResults = false; // 不返回中间结果
+      this.recognition.lang = 'zh-CN'; // 设置中文识别
+      this.recognition.maxAlternatives = 1; // 只返回一个结果
+
+      // 识别成功回调
+      this.recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        this.userInput += transcript; // 将识别结果添加到输入框
+      };
+
+      // 识别结束回调
+      this.recognition.onend = () => {
+        this.isListening = false;
+        this.$message.success('语音识别已结束');
+      };
+
+      // 识别错误回调
+      this.recognition.onerror = (event) => {
+        console.error('语音识别错误:', event.error);
+        this.isListening = false;
+        this.$message.error(`语音识别出错: ${event.error}`);
+      };
+    },
+
+    // 切换语音识别状态
+    toggleVoiceRecognition() {
+      if (!this.recognition) {
+        this.$message.warning('您的浏览器不支持语音识别功能');
+        return;
+      }
+
+      if (this.isListening) {
+        // 停止识别
+        this.recognition.stop();
+        this.isListening = false;
+      } else {
+        // 开始识别
+        this.recognition.start();
+        this.isListening = true;
+        this.$message.info('开始语音识别，请说话...');
       }
     },
     saveChatHistory() {
