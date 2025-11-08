@@ -1,12 +1,7 @@
 <template>
-  <!-- 悬浮按钮 -->
-  <div
-      class="float-button"
-      :style="{ left: buttonLeft + 'px', top: buttonTop + 'px' }"
-      @mousedown="startDrag"
-      @click="toggleChatWindow"
-  >
-    <el-icon size="24"><Message /></el-icon>
+  <!-- 悬浮按钮（固定左上角、无拖拽） -->
+  <div class="float-button" @click="toggleChatWindow">
+    AI
   </div>
 
   <!-- 聊天窗口 -->
@@ -40,7 +35,13 @@
           v-model="userInput"
           placeholder="输入问题..."
           @keyup.enter.native="sendMessage"
+          :disabled="isListening"
       ></el-input>
+      <el-button
+          :type="isListening ? 'warning' : 'success'"
+          @click="toggleVoiceInput"
+          :disabled="false"
+      >{{ isListening ? '停止' : '语音' }}</el-button>
       <el-button type="primary" @click="sendMessage">发送</el-button>
     </div>
   </div>
@@ -54,25 +55,26 @@ export default {
   components: { Message, Close },
   data() {
     return {
-      // 悬浮按钮位置
-      buttonLeft: 30,
-      buttonTop: 500,
-      // 聊天窗口位置和状态
+      // 聊天窗口位置和状态（保留窗口拖拽功能）
       isVisible: false,
       windowLeft: 200,
       windowTop: 200,
-      // 拖拽相关
-      isDragging: false,
+      // 拖拽相关（仅保留窗口拖拽）
       isWindowDragging: false,
       dragStartX: 0,
       dragStartY: 0,
       // 聊天数据
       chatHistory: [],
-      userInput: ''
+      userInput: '',
+      // 语音输入相关
+      isListening: false,
+      recognition: null
     }
   },
   created() {
-    // 监听鼠标移动和释放事件
+    // 初始化语音识别
+    this.initSpeechRecognition()
+    // 仅保留窗口拖拽的事件监听
     document.addEventListener('mousemove', this.handleDrag)
     document.addEventListener('mouseup', this.stopDrag)
     // 从本地存储加载历史记录
@@ -83,30 +85,81 @@ export default {
     document.removeEventListener('mouseup', this.stopDrag)
     // 保存聊天历史
     this.saveHistory()
+    // 停止语音识别
+    if (this.recognition && this.isListening) {
+      this.recognition.stop()
+    }
   },
   methods: {
+    // 初始化语音识别
+    initSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+      if (!SpeechRecognition) {
+        this.$message.warning('您的浏览器不支持语音输入功能')
+        return
+      }
+
+      this.recognition = new SpeechRecognition()
+      this.recognition.lang = 'zh-CN'
+      this.recognition.continuous = false
+      this.recognition.interimResults = false
+
+      this.recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript
+        this.userInput += transcript
+      }
+
+      this.recognition.onend = () => {
+        if (this.isListening) {
+          this.recognition.start()
+        }
+      }
+
+      this.recognition.onerror = (event) => {
+        console.error('语音识别错误:', event.error)
+        this.$message.error('语音识别失败: ' + event.error)
+        this.isListening = false
+      }
+    },
+
+    // 切换语音输入状态
+    toggleVoiceInput() {
+      if (!this.recognition) return
+
+      if (this.isListening) {
+        this.recognition.stop()
+        this.isListening = false
+        this.$message.success('语音输入已停止')
+      } else {
+        try {
+          this.recognition.start()
+          this.isListening = true
+          this.$message.success('请开始说话...')
+        } catch (error) {
+          console.error('启动语音识别失败:', error)
+          this.$message.error('无法启动语音输入，请稍后再试')
+        }
+      }
+    },
+
     // 加载聊天历史
     loadHistory() {
-      const history = localStorage.getItem('aiChatHistory')
+      const history = localStorage.getItem('floatAiChatHistory')
       if (history) {
         this.chatHistory = JSON.parse(history)
       }
     },
+
     // 保存聊天历史
     saveHistory() {
-      localStorage.setItem('aiChatHistory', JSON.stringify(this.chatHistory))
+      localStorage.setItem('floatAiChatHistory', JSON.stringify(this.chatHistory))
     },
+
     // 切换聊天窗口显示/隐藏
     toggleChatWindow() {
       this.isVisible = !this.isVisible
     },
-    // 开始拖拽悬浮按钮
-    startDrag(e) {
-      e.stopPropagation()
-      this.isDragging = true
-      this.dragStartX = e.clientX - this.buttonLeft
-      this.dragStartY = e.clientY - this.buttonTop
-    },
+
     // 开始拖拽聊天窗口
     startWindowDrag(e) {
       e.stopPropagation()
@@ -114,33 +167,33 @@ export default {
       this.dragStartX = e.clientX - this.windowLeft
       this.dragStartY = e.clientY - this.windowTop
     },
-    // 处理拖拽
+
+    // 处理拖拽（仅保留窗口拖拽逻辑）
     handleDrag(e) {
-      if (this.isDragging) {
-        this.buttonLeft = e.clientX - this.dragStartX
-        this.buttonTop = e.clientY - this.dragStartY
-        // 限制在可视区域内
-        this.buttonLeft = Math.max(0, Math.min(window.innerWidth - 60, this.buttonLeft))
-        this.buttonTop = Math.max(0, Math.min(window.innerHeight - 60, this.buttonTop))
-      } else if (this.isWindowDragging) {
+      if (this.isWindowDragging) {
         this.windowLeft = e.clientX - this.dragStartX
         this.windowTop = e.clientY - this.dragStartY
-        // 限制在可视区域内
+        // 限制窗口在可视区域内
         this.windowLeft = Math.max(0, Math.min(window.innerWidth - 350, this.windowLeft))
         this.windowTop = Math.max(0, Math.min(window.innerHeight - 500, this.windowTop))
       }
     },
+
     // 停止拖拽
     stopDrag() {
-      this.isDragging = false
       this.isWindowDragging = false
     },
+
     // 发送消息
     async sendMessage() {
+      if (this.isListening) {
+        this.recognition.stop()
+        this.isListening = false
+      }
+
       const question = this.userInput.trim()
       if (!question) return
 
-      // 添加用户消息
       this.chatHistory.push({
         isUser: true,
         content: question,
@@ -151,17 +204,13 @@ export default {
       this.saveHistory()
 
       try {
-        // 显示加载中
         const loadingIndex = this.chatHistory.push({
           isUser: false,
           content: '正在思考...',
           timestamp: new Date().getTime()
         }) - 1
 
-        // 调用AI接口
         const answer = await aiChatAPI({ question })
-
-        // 更新为实际回答
         this.chatHistory[loadingIndex].content = answer
         this.saveHistory()
       } catch (error) {
@@ -178,14 +227,23 @@ export default {
 </script>
 
 <style scoped>
+/* 悬浮按钮：固定左上角、随窗口缩放 */
 .float-button {
-  position: fixed; /* 固定定位，相对于视口 */
-  right: 30px; /* 距离右侧30px */
-  bottom: 80px; /* 距离底部80px（避开可能存在的其他固定元素） */
-  z-index: 9999; /* 确保在其他内容之上，参考RightPanel的z-index设计 */
-  /* 其他样式保持不变 */
-  width: 60px;
-  height: 60px;
+  position: fixed;
+  left: 2vw;  /* 距离左侧为视口宽度的2% */
+  top: 15vh;   /* 距离顶部为视口高度的2% */
+  z-index: 9998;
+
+  /* 大小随窗口变化（使用vw单位） */
+  width: 7vw;   /* 宽度为视口宽度的10% */
+  height: 7vw;  /* 高度与宽度一致（保持圆形） */
+
+  /* 限制最大/最小尺寸，避免过大或过小 */
+  max-width: 120px;
+  max-height: 120px;
+  min-width: 60px;
+  min-height: 60px;
+
   border-radius: 50%;
   background-color: #409eff;
   color: white;
@@ -194,18 +252,25 @@ export default {
   justify-content: center;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
+
+  /* 文字大小随按钮大小变化 */
+  font-size: 4vw;
+  max-font-size: 48px;
+  min-font-size: 24px;
 }
 
 .float-button:hover {
   background-color: #66b1ff;
+  transform: scale(1.05);
 }
 
+/* 聊天窗口样式保持不变 */
 .chat-window {
   position: fixed;
   right: 30px;
-  bottom: 150px; /* 在悬浮按钮上方 */
-  z-index: 10000; /* 层级高于按钮 */
+  bottom: 150px;
+  z-index: 10000;
   width: 350px;
   height: 500px;
   background-color: white;
@@ -285,5 +350,19 @@ export default {
 .el-input {
   flex: 1;
   margin-right: 8px;
+}
+
+.chat-input .el-button {
+  margin-left: 4px;
+}
+
+.el-button[icon="el-icon-microphone"] {
+  background-color: #13ce66;
+  border-color: #13ce66;
+}
+
+.el-button[icon="el-icon-microphone"]:not(.is-success) {
+  background-color: #409eff;
+  border-color: #409eff;
 }
 </style>

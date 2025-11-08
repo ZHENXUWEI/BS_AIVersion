@@ -33,7 +33,7 @@
             :disabled="isSending"/>
 <!--        语音识别-->
         <el-button
-            :type="isListening ? 'success' : 'info'"
+            :type="isListening ? 'warning' : 'success'"
             @click="toggleVoiceRecognition"
             :disabled="isSending">
           {{ isListening ? '停止识别' : '语音输入' }}
@@ -43,7 +43,7 @@
             type="primary"
             @click="sendMessage"
             :loading="isSending">发送</el-button>
-        <el-button type="warning" @click="clearChatHistory">清空记录</el-button>
+        <el-button type="danger" @click="clearChatHistory">清空记录</el-button>
       </div>
     </div>
   </div>
