@@ -14,6 +14,7 @@ import { getCookie, setCookie, removeCookie } from "@/utils/cookie";
 import { useRouter, useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import {createRouter as $router} from "vue-router/dist/vue-router.esm-browser.js";
+import Cookies from "js-cookie";
 
 const props = defineProps({
   parentData: String,
@@ -23,12 +24,13 @@ const route = useRoute();
 const users = ref({});
 // users.value.companyName="浙江省产业大数据有限公司"
 const isOpen = ref(false);
+const isLogin = ref(false); // 登录状态标记
 const fetchUsers = async () => {
   // const redirectUri = encodeURIComponent("http://172.19.15.224:5317");
   // const fullUrl = `http://172.18.30.42/ssoserver/moc2/authorize?response_type=code&client_id=zcfw&redirect_uri=${redirectUri}&state=ok`;
   try {
-    // 直接请求后端的/oauth-login接口，由后端处理重定向
-    window.location.href = '/api/oauth-login'; // 利用后端接口重定向到SSO服务
+    // 直接请求后端的/login接口
+    window.location.href = '/login';
   } catch (error) {
     console.error('登录跳转失败:', error);
   }
@@ -46,6 +48,24 @@ const fetchUsers = async () => {
     // });
     // await policyVisitNAPI();
     // router.push({ path: `/policyModel` });
+};
+
+// 检查登录状态
+const checkLoginStatus = () => {
+  // 若依默认token存储键为Admin-Token，可根据实际情况修改
+  const token = Cookies.get('Admin-Token');
+  isLogin.value = !!token;
+};
+
+// 未登录时跳转到登录页
+const goToLogin = () => {
+  router.push('/login');
+};
+
+// 已登录时跳转到若依后台
+const goToRuoYiBackend = () => {
+  // 若依后台地址，根据实际部署地址修改
+  window.location.href = 'http://localhost:81';
 };
 
 const loginOut = () => {
@@ -93,6 +113,11 @@ onMounted(async () => {
   if (info) {
     users.value = info;
   }
+  checkLoginStatus();
+  // 监听路由变化，实时更新登录状态
+  router.afterEach(() => {
+    checkLoginStatus();
+  });
 });
 const activeIndex = ref(0);
 
@@ -176,9 +201,20 @@ const toAI=()=>{
       </div>
 
       <div class="in_com_box" v-else>
-        <el-button style="margin-right: 2vw;cursor: pointer;font-size: 0.9vw;padding: 0.9vw;max-height: 1vw;border-radius: 0.2vw;" @click="fetchUsers"><span >登录</span>
-          </el-button
-      >
+        <el-button
+            v-if="!isLogin"
+            type="primary"
+            @click="goToLogin"
+        >
+          登录
+        </el-button>
+        <el-button
+            v-else
+            type="primary"
+            @click="goToRuoYiBackend"
+        >
+          前往后台管理
+        </el-button>
       </div>
       
     </div>
