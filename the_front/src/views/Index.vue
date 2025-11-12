@@ -131,7 +131,10 @@ const toPolicyModelFun=async()=>{
         return
     }
    await policyMatchNAPI()
-   router.push("/policyModel")
+  router.push({
+    path: "/policyModelMatch", // 目标匹配页面路由
+    query: { modelId: modelId } // 传递模型ID
+  });
 }
 onMounted(async ()=>{
     const info = getCookie()

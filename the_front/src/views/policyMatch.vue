@@ -35,6 +35,15 @@ const getUrl=(index)=>{
 }
 onMounted(async ()=>{
     policy()
+  // 获取路由参数中的modelId
+  modelId.value = route.query.modelId;
+  if (!modelId.value) {
+    ElMessage.error('未找到模型信息');
+    return;
+  }
+  // 根据modelId请求该模型的匹配数据
+  const res = await getModelMatchDataAPI({ modelId: modelId.value });
+  matchData.value = res.data;
   })
 
   const toPolicyModelFun=async()=>{
@@ -44,8 +53,11 @@ onMounted(async ()=>{
         return
     }
    await policyMatchNAPI()
-   router.push("/policyModel")
-}
+    router.push({
+      path: "/policyModelMatch", // 目标匹配页面路由
+      query: { modelId: modelId } // 传递模型ID
+    });
+  }
 const toPolicyShenBaoFun=async()=>{
     const info = getCookie()
     if(!info){
@@ -85,7 +97,7 @@ const toPolicyShenBaoFun=async()=>{
               </div>
 
               <div class="third">
-                  <span @click="toPolicyModelFun" style="cursor: pointer;">立即自评</span>
+                  <span @click="toPolicyModelFun(item.modelId)" style="cursor: pointer;">立即自评</span>
 <!--                  <span @click="toPolicyShenBaoFun" style="cursor: pointer;">委托申报</span>-->
               </div>
             </div>
@@ -112,7 +124,7 @@ const toPolicyShenBaoFun=async()=>{
               </div>
 
               <div class="third">
-                  <span @click="toPolicyModelFun" style="cursor: pointer;">立即自评</span>
+                  <span @click="toPolicyModelFun(item.modelId)" style="cursor: pointer;">立即自评</span>
 <!--                  <span @click="toPolicyShenBaoFun" style="cursor: pointer;">模拟申报</span>-->
               </div>
             </div>

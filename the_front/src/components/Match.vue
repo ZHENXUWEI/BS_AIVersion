@@ -59,7 +59,7 @@
                       <div 
                       id="u1237_text" 
                       class="text"
-                      @click="toPolicyModelFun"
+                      @click="toPolicyModelFun(item.modelId)"
                       >
                         查看评价
                       </div>

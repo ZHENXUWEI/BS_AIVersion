@@ -5,6 +5,7 @@ import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.web.controller.api.domain.IndicatorDetail;
 import com.ruoyi.web.controller.api.domain.dto.PolicyAPIDto;
 import com.ruoyi.web.controller.company.domain.Company;
 import com.ruoyi.web.controller.company.domain.CompanyIndicatorDictionary;
@@ -54,6 +55,32 @@ public class PolicyServiceImpl implements IPolicyService {
 
     @Autowired
     private ICompanyIndicatorDictionaryService companyIndicatorDictionaryService;
+
+    @Override
+    public List<IndicatorDetail> getIndicatorsByModelId(Integer modelId) {
+        List<PolicyModel> policyModels = policyMapper.selectPolicyModelListByPolicyId(modelId);
+        List<IndicatorDetail> indicators = new ArrayList<>();
+
+        for (PolicyModel model : policyModels) {
+            // 获取指标字典信息
+            CompanyIndicatorDictionary dict = companyIndicatorDictionaryService.selectCompanyIndicatorDictionaryById(
+                    model.getIndicatorDictionaryId()
+            );
+
+            IndicatorDetail indicator = new IndicatorDetail();
+            indicator.setId(dict.getId());
+            indicator.setName(dict.getName());
+            indicator.setKey(dict.getKey());
+            indicator.setType(dict.getType());
+            // 拼接阈值表达式（操作符+阈值）
+            indicator.setThreshold(model.getOperator() + model.getThreshold());
+            indicator.setRequired(true);
+
+            indicators.add(indicator);
+        }
+
+        return indicators;
+    }
 
     /**
      * 从一个给定的字符串中提取所有的数字，并将每个匹配的数字及其位置信息存储到一个Result对象的列表中

@@ -140,6 +140,18 @@ const router = createRouter({
         {
             path: '/detail', component: Detail
         },
+        {
+            path: '/model-data-input',
+            name: 'ModelDataInput',
+            component: () => import('@/components/ModelDataInput.vue'),
+            meta: { title: '输入指标数据' }
+        },
+        {
+            path: '/model-match-result',
+            name: 'ModelMatchResult',
+            component: () => import('@/components/ModelMatchResult.vue'),
+            meta: { title: '模型匹配结果' }
+        }
     ]
 })
 

@@ -1,5 +1,23 @@
 import request from "@/utils/request";
 
+// 获取模型指标
+export function getModelIndicatorsAPI(obj) {
+    return request({
+        url: `/api/model/indicators`,
+        method: "post",
+        data: obj
+    });
+}
+
+// 模型匹配
+export function matchModelDataAPI(obj) {
+    return request({
+        url: `/api/model/match`,
+        method: "post",
+        data: obj
+    });
+}
+
 // 1、获取企业信息回显数据
 export function enterpriseDataAPI(obj) {
   return request({

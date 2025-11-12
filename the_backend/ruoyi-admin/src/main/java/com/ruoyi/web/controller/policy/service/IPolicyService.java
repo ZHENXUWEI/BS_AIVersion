@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.web.controller.api.domain.IndicatorDetail;
 import com.ruoyi.web.controller.api.domain.dto.PolicyAPIDto;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,6 +17,9 @@ import com.ruoyi.web.controller.policy.domain.dto.PolicyModel;
 
 public interface IPolicyService
 {
+    // 在IPolicyService接口中添加
+    List<IndicatorDetail> getIndicatorsByModelId(Integer modelId);
+
     /**
      * 查询【请填写功能名称】
      *
