@@ -12,9 +12,10 @@ import {
 import { policyVisitNAPI } from "@/api/policy";
 import { getCookie, setCookie, removeCookie } from "@/utils/cookie";
 import { useRouter, useRoute } from "vue-router";
-import { ElMessage } from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {createRouter as $router} from "vue-router/dist/vue-router.esm-browser.js";
 import Cookies from "js-cookie";
+import request from "@/utils/request.js";
 
 const props = defineProps({
   parentData: String,
@@ -68,10 +69,43 @@ const goToRuoYiBackend = () => {
   window.location.href = 'http://localhost:81';
 };
 
-const loginOut = () => {
-  removeCookie();
-  users.value = "";
-  router.push({ name: "Home" });
+// 退出登录处理
+const handleLogout = async () => {
+  try {
+    // 显示确认弹窗
+    await ElMessageBox.confirm(
+        '确定要退出登录吗？',
+        '退出确认',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+    );
+
+    // 调用若依退出接口（若依默认退出接口）
+    await request({
+      url: '/logout',
+      method: 'post'
+    });
+
+    // 清除本地存储的token和用户信息
+    Cookies.remove('Admin-Token');
+    Cookies.remove('username');
+    Cookies.remove('password');
+    Cookies.remove('rememberMe');
+
+    // 更新登录状态
+    isLogin.value = false;
+
+    // 跳转到登录页
+    router.push('/');
+    ElMessage.success('退出成功');
+  } catch (error) {
+    // 取消退出时不做处理
+    if (error === 'cancel') return;
+    ElMessage.error('退出失败，请重试');
+  }
 };
 onMounted(async () => {
   const query = route.query;
@@ -92,23 +126,10 @@ onMounted(async () => {
     });
     await policyVisitNAPI();
     router.push({ path: `/policyModel` });
-
-    // const token = await getAccessToken(query.code, query.state);
-    // if (token.data) {
-    //   const openRes = await getOpenId(token.data);
-    //   if (openRes.data.openid) {
-    //     const usrInfo = await getusrinfo(token.data, openRes.data.openid);
-    //     console.log("usrInfo");
-    //     console.log(usrInfo);
-    //   }
-    // }
   } else {
     console.log("URL 上没有任何参数");
   }
   const info = getCookie();
-
-  console.log(111111111111);
-  console.log(info);
 
   if (info) {
     users.value = info;
@@ -170,53 +191,30 @@ const toAI=()=>{
       </div>
     </div>
 
-    <div class="user">
-      <div class="out_com_box" v-if="users.companyName">
-        <div
-          class="com_box"
-          @mouseenter="isOpen = true"
-          @mouseleave="isOpen = false"
-        >
-          <!-- <span class="qiyelogo">企业</span> -->
-          <span class="companyName" @click="BusinessSystem">{{
-            users.companyName
-          }}</span>
-          <!-- <div class="dropdown_box" v-if="isOpen">
-                    <div  class="dropdown">
-                        <ul>
-                            <li @click="BusinessSystem">业务系统</li>
-                            <li>管理系统</li>
-                            <li >退出登录</li>
-                        </ul>
-                    </div>
-                </div> -->
-        </div>
-        <span class="suxian"></span>
-        <span
-          class="loginout"
-          @click="loginOut"
-          style="margin-right: 2vw; cursor: pointer;font-size: 0.9vw;"
-          >退出登录</span
-        >
-      </div>
-
-      <div class="in_com_box" v-else>
+    <div class="header-actions">
+      <!-- 登录/退出/后台跳转按钮组 -->
+      <template v-if="isLogin">
         <el-button
-            v-if="!isLogin"
-            type="primary"
-            @click="goToLogin"
-        >
-          登录
-        </el-button>
-        <el-button
-            v-else
             type="primary"
             @click="goToRuoYiBackend"
+            style="margin-right: 10px"
         >
           前往后台管理
         </el-button>
-      </div>
-      
+        <el-button
+            type="warning"
+            @click="handleLogout"
+        >
+          退出登录
+        </el-button>
+      </template>
+      <el-button
+          v-else
+          type="primary"
+          @click="goToLogin"
+      >
+        登录
+      </el-button>
     </div>
   </div>
 </template>
