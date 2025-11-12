@@ -4,7 +4,7 @@
     <div class="result-header" :class="success ? 'success' : 'failure'">
       <el-icon :size="48" class="result-icon">
         <successFilled v-if="success" />
-        <errorFilled v-else />
+        <CircleCloseFilled v-else />
       </el-icon>
       <h2>{{ success ? '匹配成功' : '匹配失败' }}</h2>
     </div>
@@ -41,7 +41,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { SuccessFilled, ErrorFilled } from '@element-plus/icons-vue';
+import { SuccessFilled, CircleCloseFilled } from '@element-plus/icons-vue';
 
 const router = useRouter();
 const success = ref(false);
