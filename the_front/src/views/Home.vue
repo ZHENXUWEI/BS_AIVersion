@@ -264,15 +264,15 @@ const moreInfo = () => {
 <!--                    </div>-->
 <!--                </div>-->
 
-                <div class="policyOverview_show">
-                    <img src="../assets/images/政策智能匹配.png" class="policyOverview_img" alt="">
-                    <div>
-                        <p>
-                            <font>{{ policyStatus.matchN }}</font>次
-                        </p>
-                        <p>政策匹配次数</p>
-                    </div>
-                </div>
+<!--                <div class="policyOverview_show">-->
+<!--                    <img src="../assets/images/政策智能匹配.png" class="policyOverview_img" alt="">-->
+<!--                    <div>-->
+<!--                        <p>-->
+<!--                            <font>{{ policyStatus.matchN }}</font>次-->
+<!--                        </p>-->
+<!--                        <p>政策匹配次数</p>-->
+<!--                    </div>-->
+<!--                </div>-->
 
 <!--                <div class="policyOverview_show">-->
 <!--                    <img src="../assets/images/企业申报数量.png" class="policyOverview_img" alt="">-->
@@ -367,114 +367,114 @@ const moreInfo = () => {
 <!--        </div>-->
 
 
-        <div class="hotpolicy">
-            <div class="hotpolicy_header">
-                <h3>热门评价模型</h3>
-                <p>海量项目申报查询 &nbsp;&nbsp;&nbsp;&nbsp; 一对一政策精准评价</p>
-            </div>
+<!--        <div class="hotpolicy">-->
+<!--            <div class="hotpolicy_header">-->
+<!--                <h3>热门评价模型</h3>-->
+<!--                <p>海量项目申报查询 &nbsp;&nbsp;&nbsp;&nbsp; 一对一政策精准评价</p>-->
+<!--            </div>-->
 
-            <div class="enterprise">
-                <div>
-                    <img class="model_img" src="../assets/images/模型0.png" alt="">
-                    <h4>{{ currentYear }}科技型中小企业</h4>
-                    <span class="txt">浙江省科学技术厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
-                <div>
-                    <img class="model_img" src="../assets/images/模型1.png" alt="">
-                    <h4>{{ currentYear }}高新技术企业</h4>
-                    <span class="txt">浙江省科学技术厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
-                <div>
-                    <img class="model_img" src="../assets/images/模型2.png" alt="">
-                    <h4>{{ currentYear }}国家企业技术中心</h4>
-                    <span class="txt">浙江省科学技术厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
+<!--            <div class="enterprise">-->
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型0.png" alt="">-->
+<!--                    <h4>{{ currentYear }}科技型中小企业</h4>-->
+<!--                    <span class="txt">浙江省科学技术厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型1.png" alt="">-->
+<!--                    <h4>{{ currentYear }}高新技术企业</h4>-->
+<!--                    <span class="txt">浙江省科学技术厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型2.png" alt="">-->
+<!--                    <h4>{{ currentYear }}国家企业技术中心</h4>-->
+<!--                    <span class="txt">浙江省科学技术厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
 
-                <div>
-                    <img class="model_img" src="../assets/images/模型3.png" alt="">
-                    <h4>{{ currentYear }}创新型中小企业</h4>
-                    <span class="txt">浙江省经济和信息化厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型3.png" alt="">-->
+<!--                    <h4>{{ currentYear }}创新型中小企业</h4>-->
+<!--                    <span class="txt">浙江省经济和信息化厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
 
-                <div>
-                    <img class="model_img" src="../assets/images/模型4.png" alt="">
-                    <h4>{{ currentYear }}专精特新中小企业</h4>
-                    <span class="txt">浙江省经济和信息化厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型4.png" alt="">-->
+<!--                    <h4>{{ currentYear }}专精特新中小企业</h4>-->
+<!--                    <span class="txt">浙江省经济和信息化厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
 
-                <div>
-                    <img class="model_img" src="../assets/images/模型5.png" alt="">
-                    <h4>{{ currentYear }}专精特新小巨人企业</h4>
-                    <span class="txt">浙江省经济和信息化厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
-            </div>
-        </div>
-        <div class="hotpolicy">
-            <div class="hotpolicy_header">
-                <h3>热门预测模型</h3>
-                <p>海量项目申报查询 &nbsp;&nbsp;&nbsp;&nbsp; 一对一政策精准预测</p>
-            </div>
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型5.png" alt="">-->
+<!--                    <h4>{{ currentYear }}专精特新小巨人企业</h4>-->
+<!--                    <span class="txt">浙江省经济和信息化厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="hotpolicy">-->
+<!--            <div class="hotpolicy_header">-->
+<!--                <h3>热门预测模型</h3>-->
+<!--                <p>海量项目申报查询 &nbsp;&nbsp;&nbsp;&nbsp; 一对一政策精准预测</p>-->
+<!--            </div>-->
 
-            <div class="enterprise">
-                <div>
-                    <img class="model_img" src="../assets/images/模型0.png" alt="">
-                    <h4>{{ currentYear + 1 }}科技型中小企业</h4>
-                    <span class="txt">浙江省科学技术厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
-                <div>
-                    <img class="model_img" src="../assets/images/模型1.png" alt="">
-                    <h4>{{ currentYear + 1 }}高新技术企业</h4>
-                    <span class="txt">浙江省科学技术厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
-                <div>
-                    <img class="model_img" src="../assets/images/模型2.png" alt="">
-                    <h4>{{ currentYear + 1 }}国家企业技术中心</h4>
-                    <span class="txt">浙江省科学技术厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
+<!--            <div class="enterprise">-->
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型0.png" alt="">-->
+<!--                    <h4>{{ currentYear + 1 }}科技型中小企业</h4>-->
+<!--                    <span class="txt">浙江省科学技术厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型1.png" alt="">-->
+<!--                    <h4>{{ currentYear + 1 }}高新技术企业</h4>-->
+<!--                    <span class="txt">浙江省科学技术厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型2.png" alt="">-->
+<!--                    <h4>{{ currentYear + 1 }}国家企业技术中心</h4>-->
+<!--                    <span class="txt">浙江省科学技术厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
 
-                <div>
-                    <img class="model_img" src="../assets/images/模型3.png" alt="">
-                    <h4>{{ currentYear + 1 }}创新型中小企业</h4>
-                    <span class="txt">浙江省经济和信息化厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型3.png" alt="">-->
+<!--                    <h4>{{ currentYear + 1 }}创新型中小企业</h4>-->
+<!--                    <span class="txt">浙江省经济和信息化厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
 
-                <div>
-                    <img class="model_img" src="../assets/images/模型4.png" alt="">
-                    <h4>{{ currentYear + 1 }}专精特新中小企业</h4>
-                    <span class="txt">浙江省经济和信息化厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型4.png" alt="">-->
+<!--                    <h4>{{ currentYear + 1 }}专精特新中小企业</h4>-->
+<!--                    <span class="txt">浙江省经济和信息化厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
 
-                <div>
-                    <img class="model_img" src="../assets/images/模型5.png" alt="">
-                    <h4>{{ currentYear + 1 }}专精特新小巨人企业</h4>
-                    <span class="txt">浙江省经济和信息化厅</span>
-                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">
-                        立即自评</span>
-                </div>
-            </div>
-        </div>
+<!--                <div>-->
+<!--                    <img class="model_img" src="../assets/images/模型5.png" alt="">-->
+<!--                    <h4>{{ currentYear + 1 }}专精特新小巨人企业</h4>-->
+<!--                    <span class="txt">浙江省经济和信息化厅</span>-->
+<!--                    <span class="enterprise_text" @click="toPolicyModelYuCeFun" style="cursor: pointer;">-->
+<!--                        立即自评</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
         <Footer/>
     </div>
 </template>

@@ -179,9 +179,9 @@ const toAI=()=>{
         <span :class="{ active: activeIndex === 1 }" style="cursor: pointer"
           ><RouterLink class="rl" to="/policy">政策查询</RouterLink></span
         >
-        <span :class="{ active: activeIndex === 2 }" style="cursor: pointer"
-          ><RouterLink class="rl" to="/match">政策匹配</RouterLink></span
-        >
+<!--        <span :class="{ active: activeIndex === 2 }" style="cursor: pointer"-->
+<!--          ><RouterLink class="rl" to="/match">政策匹配</RouterLink></span-->
+<!--        >-->
         <el-button
             type="primary"
             @click="toAI()"
