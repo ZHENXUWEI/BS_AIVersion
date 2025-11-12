@@ -254,15 +254,15 @@ const moreInfo = () => {
                     </div>
                 </div>
 
-                <div class="policyOverview_show">
-                    <img src="../assets/images/企业用户.png" class="policyOverview_img" alt="">
-                    <div>
-                        <p>
-                            <font>{{ policyStatus.companyN }}</font>个
-                        </p>
-                        <p>企业用户</p>
-                    </div>
-                </div>
+<!--                <div class="policyOverview_show">-->
+<!--                    <img src="../assets/images/企业用户.png" class="policyOverview_img" alt="">-->
+<!--                    <div>-->
+<!--                        <p>-->
+<!--                            <font>{{ policyStatus.companyN }}</font>个-->
+<!--                        </p>-->
+<!--                        <p>企业用户</p>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div class="policyOverview_show">
                     <img src="../assets/images/政策智能匹配.png" class="policyOverview_img" alt="">
@@ -270,19 +270,19 @@ const moreInfo = () => {
                         <p>
                             <font>{{ policyStatus.matchN }}</font>次
                         </p>
-                        <p>政策智能匹配</p>
+                        <p>政策匹配次数</p>
                     </div>
                 </div>
 
-                <div class="policyOverview_show">
-                    <img src="../assets/images/企业申报数量.png" class="policyOverview_img" alt="">
-                    <div>
-                        <p>
-                            <font>{{ policyStatus.declarationN }}</font>次
-                        </p>
-                        <p>企业申报数量</p>
-                    </div>
-                </div>
+<!--                <div class="policyOverview_show">-->
+<!--                    <img src="../assets/images/企业申报数量.png" class="policyOverview_img" alt="">-->
+<!--                    <div>-->
+<!--                        <p>-->
+<!--                            <font>{{ policyStatus.declarationN }}</font>次-->
+<!--                        </p>-->
+<!--                        <p>企业申报数量</p>-->
+<!--                    </div>-->
+<!--                </div>-->
 
             </div>
         </div>
@@ -327,44 +327,44 @@ const moreInfo = () => {
                 </div>
             </div>
         </div>
-        <div class="policy_new policy_new_extra">
-            <div class="policy_left">
-                <div class="newP">
-                    <h1>精准推送政策</h1>
-                    <p @click="moreInfo" style="cursor: pointer;">更多>></p>
-                </div>
-                <div class="el-card" v-for="(item, index) in policyinfoPushData" :key="index">
-                    <h5 @click="detail(item.id)">{{ item.policyName }}</h5>
-                    <p>
-                        <span>牵头部门：</span><span>{{ item.leaderDepartment }}</span>
-                        <span style="margin-left: 0.5vw;">发布时间：</span><span>{{ item.publishDate.split('T')[0] }}</span>
-                    </p>
-                    <div>
-                        <el-tag type="danger">{{ lastDays(item.expireDate) }}</el-tag>
-                        <el-tag style="margin-left: 1vw;">{{ item.policyType ? item.policyType:"暂无政策类型"}}</el-tag>
-                        <!-- {{ item.isMoney ? "资金支持" : "无资金支持" }} -->
-                    </div>
-                </div>
-            </div>
-            <div class="policy_right">
-                <div class="newP">
-                    <h1>可申报政策</h1>
-                    <p @click="moreInfo" style="cursor: pointer;">更多>></p>
-                </div>
-                <div class="el-card " v-for="(item, index) in policyEffectiveData" :key="index">
-                    <h5 @click="detail(item.id)">{{ item.policyName }}</h5>
-                    <p>
-                        <span>牵头部门：</span><span>{{ item.leaderDepartment }}</span>
-                        <span style="margin-left: 0.5vw;">发布时间：</span><span>{{ item.publishDate.split('T')[0] }}</span>
-                    </p>
-                    <div>
-                        <el-tag type="danger">{{ lastDays(item.expireDate) }}</el-tag>
-                        <el-tag style="margin-left: 1vw;">{{ item.policyType ? item.policyType:"暂无政策类型"}}</el-tag>
-                        <!-- {{ item.isMoney ? "资金支持" : "无资金支持" }} -->
-                    </div>
-                </div>
-            </div>
-        </div>
+<!--        <div class="policy_new policy_new_extra">-->
+<!--            <div class="policy_left">-->
+<!--                <div class="newP">-->
+<!--                    <h1>精准推送政策</h1>-->
+<!--                    <p @click="moreInfo" style="cursor: pointer;">更多>></p>-->
+<!--                </div>-->
+<!--                <div class="el-card" v-for="(item, index) in policyinfoPushData" :key="index">-->
+<!--                    <h5 @click="detail(item.id)">{{ item.policyName }}</h5>-->
+<!--                    <p>-->
+<!--                        <span>牵头部门：</span><span>{{ item.leaderDepartment }}</span>-->
+<!--                        <span style="margin-left: 0.5vw;">发布时间：</span><span>{{ item.publishDate.split('T')[0] }}</span>-->
+<!--                    </p>-->
+<!--                    <div>-->
+<!--                        <el-tag type="danger">{{ lastDays(item.expireDate) }}</el-tag>-->
+<!--                        <el-tag style="margin-left: 1vw;">{{ item.policyType ? item.policyType:"暂无政策类型"}}</el-tag>-->
+<!--                        &lt;!&ndash; {{ item.isMoney ? "资金支持" : "无资金支持" }} &ndash;&gt;-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="policy_right">-->
+<!--                <div class="newP">-->
+<!--                    <h1>可申报政策</h1>-->
+<!--                    <p @click="moreInfo" style="cursor: pointer;">更多>></p>-->
+<!--                </div>-->
+<!--                <div class="el-card " v-for="(item, index) in policyEffectiveData" :key="index">-->
+<!--                    <h5 @click="detail(item.id)">{{ item.policyName }}</h5>-->
+<!--                    <p>-->
+<!--                        <span>牵头部门：</span><span>{{ item.leaderDepartment }}</span>-->
+<!--                        <span style="margin-left: 0.5vw;">发布时间：</span><span>{{ item.publishDate.split('T')[0] }}</span>-->
+<!--                    </p>-->
+<!--                    <div>-->
+<!--                        <el-tag type="danger">{{ lastDays(item.expireDate) }}</el-tag>-->
+<!--                        <el-tag style="margin-left: 1vw;">{{ item.policyType ? item.policyType:"暂无政策类型"}}</el-tag>-->
+<!--                        &lt;!&ndash; {{ item.isMoney ? "资金支持" : "无资金支持" }} &ndash;&gt;-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
 
 
         <div class="hotpolicy">

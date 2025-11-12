@@ -86,7 +86,7 @@ const toPolicyShenBaoFun=async()=>{
 
               <div class="third">
                   <span @click="toPolicyModelFun" style="cursor: pointer;">立即自评</span>
-                  <span @click="toPolicyShenBaoFun" style="cursor: pointer;">委托申报</span>
+<!--                  <span @click="toPolicyShenBaoFun" style="cursor: pointer;">委托申报</span>-->
               </div>
             </div>
             <div class="el_card_right">
@@ -113,7 +113,7 @@ const toPolicyShenBaoFun=async()=>{
 
               <div class="third">
                   <span @click="toPolicyModelFun" style="cursor: pointer;">立即自评</span>
-                  <span @click="toPolicyShenBaoFun" style="cursor: pointer;">模拟申报</span>
+<!--                  <span @click="toPolicyShenBaoFun" style="cursor: pointer;">模拟申报</span>-->
               </div>
             </div>
             <div class="el_card_right">
