@@ -754,7 +754,7 @@ export default {
       console.log(this.modelId);
       if (scope.row.docDetail !== null) {
         scope.row.docDetail = scope.row.docDetail
-          .trimEnd() 
+          .trimEnd()
           .replace(/;$/, "");
         const items = scope.row.docDetail.split(";");
         this.docDetail = items.map((item) => {
@@ -1076,7 +1076,7 @@ export default {
     },
     modelRecordAdd() {
       this.$refs.formAdd.validate((valid) => {
-        if (!valid) return; 
+        if (!valid) return;
         if (this.formAdd.id !== null) {
           updatePolicy(this.formAdd).then((res) => {
             this.dialogFormVisibleAdd = false;
@@ -1307,12 +1307,12 @@ export default {
               @click="lookup(scope.row)"
               >编辑模型</el-button
             >
-            <el-button
-              size="mini"
-              v-hasPermi="['futureModel:policyModel:matchCompany']"
-              @click="check(scope.$index)"
-              >匹配企业</el-button
-            >
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              v-hasPermi="['futureModel:policyModel:matchCompany']"-->
+<!--              @click="check(scope.$index)"-->
+<!--              >匹配企业</el-button-->
+<!--            >-->
             <el-button
               size="mini"
               type="success"

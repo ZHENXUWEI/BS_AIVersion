@@ -110,12 +110,12 @@
               @click="lookup(scope.row)"
               >编辑模型</el-button
             >
-            <el-button
-              size="mini"
-              v-hasPermi="['system:policyModel:matchCompany']"
-              @click="check(scope.$index)"
-              >匹配企业</el-button
-            >
+<!--            <el-button-->
+<!--              size="mini"-->
+<!--              v-hasPermi="['system:policyModel:matchCompany']"-->
+<!--              @click="check(scope.$index)"-->
+<!--              >匹配企业</el-button-->
+<!--            >-->
             <el-button
               size="mini"
               type="success"
